@@ -9,6 +9,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+var latlngs = [
+  [34.48170262662108,-224.57353055466228], [34.58170262662108,-224.67353055466228]
+];
+var polyline = L.polyline(latlngs, {color:"black"}).addTo(map);
+
 var marker = [];
 $(function(){
   $.ajax({
