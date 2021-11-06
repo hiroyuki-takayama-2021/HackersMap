@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title><%=title%></title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+  <div role='main'>
+    <table>
+      <% for(var i in content) {%>
+      <tr>
+        <% var obj = content[i]; %>
+        <th>POST ID : <%= obj.postid %></th>
+        <th>USER ID : <%= obj.userid %></th>
+        <th>DATE : <%= obj.date %></th>
+        <th>TITLE : <%= obj.title %></th>
+        <th>LAT : <%= obj.lat %></th>
+        <th>LNG : <%= obj.lng %></th>
+        <th>DETAILS : <%= obj.details %></th>
+        <th>DANGER : <%= obj.danger %></th>
+        <th>IP : <%= obj.ip_address %></th>
+      </tr>
+      <% } %>
+    </table>
+  </div>
+</body>
+<script>
+</script>
+</html>

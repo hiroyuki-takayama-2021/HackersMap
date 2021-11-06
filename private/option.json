@@ -1,0 +1,8 @@
+{
+  "mysql_host" : "localhost",
+  "mysql_user" : "root",
+  "password" : "",
+  "database" : "incident_database",
+  "Trouble_Table_name" : "incidents_info",
+  "public_ip" : "http://localhost/"
+}
