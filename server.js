@@ -28,6 +28,7 @@ let table = option.Trouble_Table_name;
 
 // 公開フォルダの指定
 app.use( express.static( __dirname + '/public' ) );
+app.use( express.static( __dirname + '/svg' ) );
 app.use( express.static( __dirname + '/node_modules' ) );
 
 app.use(express.urlencoded({
@@ -40,6 +41,16 @@ app.engine('ejs',ejs.renderFile);
 app.get("/",(req,res)=>{
     console.log("/get");
     res.render('index.ejs',{});
+});
+
+app.get("/search",(req,res)=>{
+    console.log("/search get");
+    res.render('search.ejs',{});
+});
+
+app.get("/draw",(req,res)=>{
+    console.log("/draw get");
+    res.render('draw.ejs',{});
 });
 
 app.get("/sql",(req,res)=>{
@@ -63,6 +74,8 @@ app.get("/ajax",(req,res)=>{
         if(error==null){
           console.log("ajax get well done!");
           res.json(results);
+        }else{
+          console.log(error);
         }
       }
     );
@@ -82,6 +95,8 @@ app.post("/ajax",(req,res)=>{
       function(error, results, fields){
         if(error==null){
           console.log("posted info");
+        }else{
+          console.log(error);
         }
       }
     );
@@ -124,6 +139,8 @@ app.get("/database",(req,res)=>{
               title : 'mysql',
               content : results
             });
+        }else{
+          console.log(error);
         }
       }
     );
