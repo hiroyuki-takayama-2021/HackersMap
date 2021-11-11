@@ -64,6 +64,11 @@ app.get("/maintain",(req,res)=>{
   res.render('maintain.ejs',{});
 });
 
+app.get("/test",(req,res)=>{
+  console.log("/test get");
+  res.render('test.ejs',{});
+});
+
 app.get("/ajax",(req,res)=>{
     console.log("/ajax get");
     var connection = mysql.createConnection(mysql_setting);
@@ -123,6 +128,13 @@ app.post("/ajax_delete",(req,res)=>{
     );
 
   connection.end();
+});
+
+app.post("/post_test",(req,res)=>{
+    console.log("/post_test");
+    let info = req.body;
+    console.log(req.body);
+
 });
 
 app.get("/database",(req,res)=>{

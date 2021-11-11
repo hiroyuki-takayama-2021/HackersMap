@@ -13,7 +13,7 @@ var marker = [];
 $(function(){
   $.ajax({
   type: "GET",
-  url: "http://localhost:3000/ajax",
+  url: "/ajax",
   dataType: "json"
   }).done(function( data, textStatus, jqXHR ) {
     $("log").text("Connection All Correct.");

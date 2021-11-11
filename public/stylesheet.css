@@ -27,34 +27,24 @@
   }
 }
 
-.btn-circle-flat {
-  display: inline-block;
-  text-decoration: none;
-  background: #87befd;
-  color: #FFF;
-  width: 60px;
-  height: 60px;
-  line-height: 120px;
-  border-radius: 50%;
-  text-align: center;
-  overflow: hidden;
-  transition: .4s;
+.cp_iptxt {
+	position: relative;
+	width: 80%;
+	margin: 20px 3%;
 }
-
-.btn-circle-flat-here{
-  display: inline-block;
-  text-decoration: none;
-  background: #668ad8;
-  color: #FFF;
-  width: 60px;
-  height: 60px;
-  line-height: 120px;
-  border-radius: 50%;
-  text-align: center;
-  overflow: hidden;
-  transition: .4s;
+.cp_iptxt input[type='text'] {
+	font: 15px/24px sans-serif;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0.3em;
+	transition: 0.3s;
+	letter-spacing: 1px;
+	color: #0587ff;
+	border: 1px solid #87e4f7;
+	border-radius: 4px;
 }
-
-.btn-circle-flat:hover {
-  background: #668ad8;
+.ef input[type='text']:focus {
+	border: 1px solid #87e4f7;
+	outline: none;
+	box-shadow: 0 0 5px 1px rgba(20,249,255, .5);
 }
