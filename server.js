@@ -28,6 +28,7 @@ let table = option.Trouble_Table_name;
 
 // 公開フォルダの指定
 app.use( express.static( __dirname + '/public' ) );
+app.use( express.static( __dirname + '/svg' ) );
 app.use( express.static( __dirname + '/node_modules' ) );
 
 app.use(express.urlencoded({
@@ -42,6 +43,16 @@ app.get("/",(req,res)=>{
     res.render('index.ejs',{});
 });
 
+app.get("/search",(req,res)=>{
+    console.log("/search get");
+    res.render('search.ejs',{});
+});
+
+app.get("/draw",(req,res)=>{
+    console.log("/draw get");
+    res.render('draw.ejs',{});
+});
+
 app.get("/sql",(req,res)=>{
     console.log("/sql");
     res.writeHead(301, { Location: option.public_ip + "phpmyadmin" });
@@ -51,6 +62,11 @@ app.get("/sql",(req,res)=>{
 app.get("/maintain",(req,res)=>{
   console.log("/maintain get");
   res.render('maintain.ejs',{});
+});
+
+app.get("/test",(req,res)=>{
+  console.log("/test get");
+  res.render('test.ejs',{});
 });
 
 app.get("/ajax",(req,res)=>{
@@ -63,6 +79,8 @@ app.get("/ajax",(req,res)=>{
         if(error==null){
           console.log("ajax get well done!");
           res.json(results);
+        }else{
+          console.log(error);
         }
       }
     );
@@ -82,6 +100,8 @@ app.post("/ajax",(req,res)=>{
       function(error, results, fields){
         if(error==null){
           console.log("posted info");
+        }else{
+          console.log(error);
         }
       }
     );
@@ -110,6 +130,13 @@ app.post("/ajax_delete",(req,res)=>{
   connection.end();
 });
 
+app.post("/post_test",(req,res)=>{
+    console.log("/post_test");
+    let info = req.body;
+    console.log(req.body);
+
+});
+
 app.get("/database",(req,res)=>{
     console.log("/database get");
     var connection = mysql.createConnection(mysql_setting);
@@ -124,6 +151,8 @@ app.get("/database",(req,res)=>{
               title : 'mysql',
               content : results
             });
+        }else{
+          console.log(error);
         }
       }
     );
