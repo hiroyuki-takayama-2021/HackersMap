@@ -18,9 +18,15 @@ $(function(){
   }).done(function( data, textStatus, jqXHR ) {
     $("log").text("Connection All Correct.");
     for(let i = 0;i < data.length;i++){
+      var popup_info =
+      `<p>タイトル : `+data[i].title+`</p>
+      <p>詳細 : `+data[i].details+`</p>
+      <p>危険度 : ☢ x `+data[i].danger+`</p>
+      <p>投稿日時 : `+data[i].date+`</p>
+      `;
       marker[i] = L.marker([data[i].lat, data[i].lng])
-                   .bindPopup(data[i].date).addTo(map)
-                   .on( 'click', function(e) {  $(ajax_delete(e.target.postid)); });
+                   .bindPopup(popup_info).addTo(map);
+      marker[i].on('mouseover', function(e) { this.openPopup(); });
       marker[i].postid = data[i].postid;
       marker[i].userid = data[i].userid;
       marker[i].title = data[i].title;
