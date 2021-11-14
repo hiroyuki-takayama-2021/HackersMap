@@ -73,7 +73,7 @@ app.post("/",(req,res)=>{
     );
 
   connection.end();
-    res.render('test.ejs',{});
+    res.render('index.ejs',{});
 });
 
 app.get("/search",(req,res)=>{
@@ -139,7 +139,9 @@ app.post("/ajax",(req,res)=>{
       }
     );
 
-  connection.end();
+    connection.end();
+
+    res.render('index.ejs',{});
 });
 
 app.post("/ajax_delete",(req,res)=>{
@@ -160,7 +162,9 @@ app.post("/ajax_delete",(req,res)=>{
       }
     );
 
-  connection.end();
+    connection.end();
+
+    res.render('index.ejs',{});
 });
 
 app.get("/database",(req,res)=>{

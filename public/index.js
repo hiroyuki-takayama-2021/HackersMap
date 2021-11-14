@@ -28,6 +28,7 @@ $(function(){
                    .bindPopup(popup_info).addTo(map)
                    .on( 'click', function(e) { $(ajax_delete(e.target.postid)); })
       marker[i].on('mouseover', function(e) { this.openPopup(); });
+      marker[i].on('mouseout', function(e) { this.closePopup(); });
       marker[i].postid = data[i].postid;
       marker[i].userid = data[i].userid;
       marker[i].title = data[i].title;
@@ -118,7 +119,7 @@ map.on('click', function(e){
     }
     </style>
 
-    <form method="post" action="/test">
+    <form method="post" action="/">
     <div class="cp_iptxt">
       <label class="ef">
         <p>タイトル</p><input name="title" type="text" minlength="2" maxlength="20" size="20" placeholder="手短に何が起きてる？">

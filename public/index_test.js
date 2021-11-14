@@ -61,8 +61,6 @@ function ajax_delete(postid){
 map.on('click', function(e){
     let latlng = [e.latlng.lat, e.latlng.lng];
 
-    //絶対にタイムアウトする原因を特定する。
-    //でもデータ自体は送れてるのはなんぞ
     $(function(){
       $.ajax({
       timeout: 1000,
