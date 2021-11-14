@@ -120,6 +120,8 @@ app.get("/ajax",(req,res)=>{
     connection.end();
 });
 
+//ポストはajaxでしないことに決めました。
+//今は保守用に残してるだけです。
 app.post("/ajax",(req,res)=>{
     console.log("/ajax post");
     let date = new Date();
@@ -141,7 +143,7 @@ app.post("/ajax",(req,res)=>{
 
     connection.end();
 
-    res.render('index.ejs',{});
+    res.render('test.ejs',{});
 });
 
 app.post("/ajax_delete",(req,res)=>{
