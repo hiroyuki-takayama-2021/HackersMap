@@ -43,6 +43,46 @@ app.get("/",(req,res)=>{
     res.render('index.ejs',{});
 });
 
+app.post("/",(req,res)=>{
+    console.log("/post");
+    let date = new Date();
+
+    let info = {
+      "title": req.body.title,
+      "lat": req.body.lat,
+      "lng": req.body.lng,
+      "details": req.body.details,
+      "danger": req.body.danger,
+      "ip_address": "Mr.Nobody"
+    };
+    info["date"] = date.toISOString();
+
+    console.log(req.body);
+
+    var connection = mysql.createConnection(mysql_setting);
+    connection.connect();
+
+    connection.query('INSERT INTO '+table+' SET ?', info,
+      function(error, results, fields){
+        if(error==null){
+          console.log("posted info");
+        }else{
+          console.log(error);
+        }
+      }
+    );
+
+  connection.end();
+    res.render('index.ejs',{});
+});
+
+app.post("/post_test",(req,res)=>{
+    console.log("/post");
+
+    console.log(req.body);
+    res.render('index.ejs',{});
+});
+
 app.get("/search",(req,res)=>{
     console.log("/search get");
     res.render('search.ejs',{});
@@ -87,6 +127,8 @@ app.get("/ajax",(req,res)=>{
     connection.end();
 });
 
+//ポストはajaxでしないことに決めました。
+//今は保守用に残してるだけです。
 app.post("/ajax",(req,res)=>{
     console.log("/ajax post");
     let date = new Date();
@@ -106,7 +148,9 @@ app.post("/ajax",(req,res)=>{
       }
     );
 
-  connection.end();
+    connection.end();
+
+    res.render('test.ejs',{});
 });
 
 app.post("/ajax_delete",(req,res)=>{
@@ -127,14 +171,9 @@ app.post("/ajax_delete",(req,res)=>{
       }
     );
 
-  connection.end();
-});
+    connection.end();
 
-app.post("/post_test",(req,res)=>{
-    console.log("/post_test");
-    let info = req.body;
-    console.log(req.body);
-
+    res.render('index.ejs',{});
 });
 
 app.get("/database",(req,res)=>{
