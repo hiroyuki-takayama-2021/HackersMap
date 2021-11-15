@@ -76,6 +76,13 @@ app.post("/",(req,res)=>{
     res.render('index.ejs',{});
 });
 
+app.post("/post_test",(req,res)=>{
+    console.log("/post");
+
+    console.log(req.body);
+    res.render('index.ejs',{});
+});
+
 app.get("/search",(req,res)=>{
     console.log("/search get");
     res.render('search.ejs',{});

@@ -122,8 +122,8 @@ map.on('click', function(e){
     <form method="post" action="/">
     <div class="cp_iptxt">
       <label class="ef">
-        <p>タイトル</p><input name="title" type="text" minlength="2" maxlength="20" size="20" placeholder="手短に何が起きてる？">
-        <p>詳細</p><input name="details" type="text" minlength="5" maxlength="50" size="50" placeholder="詳細を書いてください。">
+        <p>タイトル</p><input name="title" type="text" minlength="2" maxlength="20" size="20" required="required" placeholder="手短に何が起きてる？">
+        <p>詳細</p><input name="details" type="text" minlength="5" maxlength="50" size="50" required="required" placeholder="詳細を書いてください。">
         <p>危険度</p>
       </label>
     </div>
@@ -148,7 +148,7 @@ map.on('click', function(e){
     </form>
     `;
 
-    var popup = L.popup({ minWidth: 300, maxHeight: 400 })
+    var popup = L.popup({ minWidth: 300, maxHeight: 550 })
     .setLatLng(latlng)
     .setContent(contentPopup)
     .openOn(map);

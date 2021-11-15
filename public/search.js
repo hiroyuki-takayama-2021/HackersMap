@@ -27,6 +27,7 @@ $(function(){
       marker[i] = L.marker([data[i].lat, data[i].lng])
                    .bindPopup(popup_info).addTo(map);
       marker[i].on('mouseover', function(e) { this.openPopup(); });
+      marker[i].on('mouseout', function(e) { this.closePopup(); });
       marker[i].postid = data[i].postid;
       marker[i].userid = data[i].userid;
       marker[i].title = data[i].title;
