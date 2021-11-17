@@ -153,7 +153,14 @@ app.get("/test",(req,res)=>{
 
 app.get("/ajax",(req,res)=>{
     console.log("/ajax get");
-    var connection = mysql.createConnection(mysql_setting);
+    let mysql_polyline_setting = {
+      host : option.mysql_host,
+      user : option.mysql_user,
+      password : option.password,
+      database : option.database
+    };
+    let table = option.Polyline_Table_name;
+    var connection = mysql.createConnection(mysql_polyline_setting);
     connection.connect();
 
     connection.query('SELECT * FROM '+table,
@@ -200,7 +207,15 @@ app.post("/ajax_delete",(req,res)=>{
     let date = new Date();
     let info = req.body.postid;
 
-    var connection = mysql.createConnection(mysql_setting);
+    let mysql_polyline_setting = {
+      host : option.mysql_host,
+      user : option.mysql_user,
+      password : option.password,
+      database : option.database
+    };
+    let table = option.Polyline_Table_name;
+
+    var connection = mysql.createConnection(mysql_polyline_setting);
     connection.connect();
 
     connection.query('DELETE FROM '+table+' WHERE postid = ?', info,
