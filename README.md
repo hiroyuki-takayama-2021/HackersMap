@@ -14,6 +14,19 @@ table名 : incidents_info
     details text
     danger : int
     in_address : text //deprecated 
+    
+table名 : incidents_polyline
+    postid : int
+    userid : int
+    date : datetime
+    title : text
+    lat1 : double
+    lng1 : double
+    lat2 : double
+    lng2 : double
+    details text
+    danger : int
+    in_address : text //deprecated 
 
 table名 : users_info
     userid : int
