@@ -4,5 +4,6 @@
   "password" : "",
   "database" : "incident_database",
   "Trouble_Table_name" : "incidents_info",
+  "Polyline_Table_name": "incidents_polyline",
   "public_ip" : "http://localhost/"
 }

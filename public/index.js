@@ -9,11 +9,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-var latlngs = [
-  [34.48170262662108,-224.57353055466228], [34.58170262662108,-224.67353055466228]
-];
-var polyline = L.polyline(latlngs, {color:"black"}).addTo(map);
-
 var marker = [];
 $(function(){
   $.ajax({
@@ -31,7 +26,7 @@ $(function(){
       `;
       marker[i] = L.marker([data[i].lat, data[i].lng])
                    .bindPopup(popup_info).addTo(map)
-                   .on( 'click', function(e) { $(ajax_delete(e.target.postid)); })
+                   .on( 'click', function(e) { $(ajax_delete(e.target.postid)); }) //delete
       marker[i].on('mouseover', function(e) { this.openPopup(); });
       marker[i].on('mouseout', function(e) { this.closePopup(); });
       marker[i].postid = data[i].postid;

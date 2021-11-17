@@ -93,6 +93,48 @@ app.get("/draw",(req,res)=>{
     res.render('draw.ejs',{});
 });
 
+app.post("/draw",(req, res)=>{
+  console.log("/post");
+  let date = new Date();
+
+  let mysql_polyline_setting = {
+    host : option.mysql_host,
+    user : option.mysql_user,
+    password : option.password,
+    database : option.database
+  };
+  let table = option.Polyline_Table_name;
+
+  let info = {
+    "title": req.body.title,
+    "lat1": req.body.lat1,
+    "lng1": req.body.lng1,
+    "lat2": req.body.lat2,
+    "lng2": req.body.lng2,
+    "details": req.body.details,
+    "danger": req.body.danger,
+    "ip_address": "Mr.Nobody"
+    };
+    info["date"] = date.toISOString();
+
+    console.log(req.body);
+
+    var connection = mysql.createConnection(mysql_polyline_setting);
+    connection.connect();
+
+    connection.query('INSERT INTO '+table+' SET ?', info,
+      function(error, results, fields){
+        if(error==null){
+          console.log("posted info");
+        }else{
+          console.log(error);
+        }
+      }
+    );
+    connection.end();
+    res.render('draw.ejs',{});
+});
+
 app.get("/sql",(req,res)=>{
     console.log("/sql");
     res.writeHead(301, { Location: option.public_ip + "phpmyadmin" });
