@@ -15,7 +15,7 @@ var polyline = [];
 $(function(){
   $.ajax({
   type: "GET",
-  url: "/ajax",
+  url: "/ajax_polyline",
   dataType: "json"
   }).done(function( data, textStatus, jqXHR ) {
     $("log").text("Connection All Correct.");
@@ -52,7 +52,7 @@ function ajax_delete(postid){
   $.ajax({
   timeout: 1000,
   type: "POST",
-  url: "/ajax_delete",
+  url: "/ajax_delete_polyline",
   data: {
     "postid": postid,
   },
