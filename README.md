@@ -13,7 +13,7 @@ table名 : incidents_info
     lng : double
     details text
     danger : int
-    in_address : text //deprecated 
+    ip_address : text //deprecated 
     
 table名 : incidents_polyline
     postid : int
@@ -26,7 +26,7 @@ table名 : incidents_polyline
     lng2 : double
     details text
     danger : int
-    in_address : text //deprecated 
+    ip_address : text //deprecated 
 
 table名 : users_info
     userid : int
