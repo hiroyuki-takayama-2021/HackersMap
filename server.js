@@ -174,7 +174,7 @@ app.post("/ajax_delete_polyline",(req,res)=>{
 
   connection.end();
 
-  res.render('index.ejs',{});
+  res.render('draw.ejs',{});
 });
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -255,9 +255,7 @@ app.post("/ajax_delete",(req,res)=>{
         }
       }
     );
-
     connection.end();
-
     res.render('index.ejs',{});
 });
 
