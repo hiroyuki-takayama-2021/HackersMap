@@ -9,9 +9,64 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------
+var polyline = [];
+$(function(){
+  $.ajax({
+  type: "GET",
+  url: "/ajax_polyline",
+  dataType: "json"
+  }).done(function( data, textStatus, jqXHR ) {
+    $("log").text("Connection All Correct.");
+    for(let i = 0;i < data.length;i++){
+      var popup_info =
+      `<p>タイトル : `+data[i].title+`</p>
+      <p>詳細 : `+data[i].details+`</p>
+      <p>危険度 : ☢ x `+data[i].danger+`</p>
+      <p>投稿日時 : `+data[i].date+`</p>
+      `;
+      polyline[i] = L.polyline([[data[i].lat1, data[i].lng1],[data[i].lat2, data[i].lng2]])
+                   .bindPopup(popup_info).addTo(map)
+                   .on( 'click', function(e) { $(ajax_delete(e.target.postid)); }) //delete
+      polyline[i].on('mouseover', function(e) { this.openPopup(); });
+      polyline[i].on('mouseout', function(e) { this.closePopup(); });
+      polyline[i].postid = data[i].postid;
+      polyline[i].userid = data[i].userid;
+      polyline[i].title = data[i].title;
+      polyline[i].lat1 = data[i].lat1;
+      polyline[i].lng1 = data[i].lng1;
+      polyline[i].lat2 = data[i].lat2;
+      polyline[i].lng2 = data[i].lng2;
+      polyline[i].details = data[i].details;
+      polyline[i].danger = data[i].danger;
+    }
+  }).fail(function( jqXHR, textStatus, errorThrown) {
+    $("log").text("Database might be sleeping.");
+  })
+});
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------
+function ajax_delete(postid){
+  $.ajax({
+  timeout: 1000,
+  type: "POST",
+  url: "/ajax_polyline_delete",
+  data: {
+    "postid": postid,
+  },
+  dataType: "json",
+  beforeSend: ()=>{
+    $("log").text("Now Deleting... Hold on a second.");
+  }
+  }).done(function(data){
+    //L.polyline([lat,lng]).bindPopup("追加された").addTo(map);
+  }).fail(function( XMLHttpRequest, textStatus, errorThrown ) {
+    if(textStatus == "timeout"){
+    //alert(JSON.stringify(XMLHttpRequest) +" : "+ errorThrown+" : "+textStatus); //なんかtimeoutする。左はチェック用
+    console.log("connection is timeout. but it's no problem.");
+    }
+  }).always(function(data, textStatus, errorThrown) {
+    window.location.reload();
+  })
+}
 
 let firstClick = false;
 let latlngs = [];
@@ -96,8 +151,10 @@ map.on('click', function(e){
         </span>
       </div>
     </div>
-    <input id="lat" name="lat1" type="hidden" value="`+latlngs[0]+`">
-    <input id="lng" name="lng1" type="hidden" value="`+latlngs[1]+`">
+    <input id="lat" name="lat1" type="hidden" value="`+latlngs[0][0]+`">
+    <input id="lng" name="lng1" type="hidden" value="`+latlngs[0][1]+`">
+    <input id="lat" name="lat2" type="hidden" value="`+latlngs[1][0]+`">
+    <input id="lng" name="lng2" type="hidden" value="`+latlngs[1][1]+`">
     <div class="cp_iptxt">
       <label class="ef">
         <button type="submit">Submit</button>
