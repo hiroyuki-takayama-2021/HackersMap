@@ -73,7 +73,7 @@ app.post("/",(req,res)=>{
     );
 
   connection.end();
-    res.render('index.ejs',{});
+    res.render('redirecting.ejs',{});
 });
 
 app.post("/post_test",(req,res)=>{
