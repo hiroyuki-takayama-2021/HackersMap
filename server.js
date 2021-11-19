@@ -200,7 +200,6 @@ app.post("/draw",(req,res)=>{
   info["date"] = date.toISOString();
 
   console.log(req.body);
-
   var connection = mysql.createConnection(polyline_setting);
   connection.connect();
 
