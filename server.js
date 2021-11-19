@@ -73,7 +73,7 @@ app.post("/",(req,res)=>{
     );
 
   connection.end();
-    res.render('index.ejs',{});
+    res.render('redirecting.ejs',{});
 });
 
 app.post("/post_test",(req,res)=>{
@@ -86,53 +86,6 @@ app.post("/post_test",(req,res)=>{
 app.get("/search",(req,res)=>{
     console.log("/search get");
     res.render('search.ejs',{});
-});
-
-app.get("/draw",(req,res)=>{
-    console.log("/draw get");
-    res.render('draw.ejs',{});
-});
-
-app.post("/draw",(req, res)=>{
-  console.log("/post");
-  let date = new Date();
-
-  let mysql_polyline_setting = {
-    host : option.mysql_host,
-    user : option.mysql_user,
-    password : option.password,
-    database : option.database
-  };
-  let table = option.Polyline_Table_name;
-
-  let info = {
-    "title": req.body.title,
-    "lat1": req.body.lat1,
-    "lng1": req.body.lng1,
-    "lat2": req.body.lat2,
-    "lng2": req.body.lng2,
-    "details": req.body.details,
-    "danger": req.body.danger,
-    "ip_address": "Mr.Nobody"
-    };
-    info["date"] = date.toISOString();
-
-    console.log(req.body);
-
-    var connection = mysql.createConnection(mysql_polyline_setting);
-    connection.connect();
-
-    connection.query('INSERT INTO '+table+' SET ?', info,
-      function(error, results, fields){
-        if(error==null){
-          console.log("posted info");
-        }else{
-          console.log(error);
-        }
-      }
-    );
-    connection.end();
-    res.render('draw.ejs',{});
 });
 
 app.get("/sql",(req,res)=>{
@@ -171,29 +124,6 @@ app.get("/ajax",(req,res)=>{
 
 //ポストはajaxでしないことに決めました。
 //今は保守用に残してるだけです。
-app.post("/ajax",(req,res)=>{
-    console.log("/ajax post");
-    let date = new Date();
-    let info = req.body;
-    info["date"] = date.toISOString();
-
-    var connection = mysql.createConnection(mysql_setting);
-    connection.connect();
-
-    connection.query('INSERT INTO '+table+' SET ?', info,
-      function(error, results, fields){
-        if(error==null){
-          console.log("posted info");
-        }else{
-          console.log(error);
-        }
-      }
-    );
-
-    connection.end();
-
-    res.render('test.ejs',{});
-});
 
 app.post("/ajax_delete",(req,res)=>{
     console.log("/ajax_delete");
@@ -212,9 +142,7 @@ app.post("/ajax_delete",(req,res)=>{
         }
       }
     );
-
     connection.end();
-
     res.render('index.ejs',{});
 });
 
@@ -239,6 +167,95 @@ app.get("/database",(req,res)=>{
     );
     connection.end();
 });
+
+//draw関連
+//-------------------------------------------------------------------------------------------------------------------------
+let polyline_setting = {
+  host : option.mysql_host,
+  user : option.mysql_user,
+  password : option.password,
+  database : option.database
+};
+let polyline_table = option.Polyline_Table_name;
+
+app.get("/draw",(req,res)=>{
+  console.log("/get");
+  res.render('draw.ejs',{});
+});
+
+app.post("/draw",(req,res)=>{
+  console.log("/post");
+  let date = new Date();
+
+  let info = {
+    "title": req.body.title,
+    "lat1": req.body.lat1,
+    "lng1": req.body.lng1,
+    "lat2": req.body.lat2,
+    "lng2": req.body.lng2,
+    "details": req.body.details,
+    "danger": req.body.danger,
+    "ip_address": "Mr.Nobody"
+  };
+  info["date"] = date.toISOString();
+
+  console.log(req.body);
+  var connection = mysql.createConnection(polyline_setting);
+  connection.connect();
+
+  connection.query('INSERT INTO '+polyline_table+' SET ?', info,
+    function(error, results, fields){
+      if(error==null){
+        console.log("posted info");
+      }else{
+        console.log(error);
+      }
+    }
+  );
+
+connection.end();
+  res.render('draw_redirecting.ejs',{});
+});
+
+app.get("/ajax_polyline",(req,res)=>{
+  console.log("/ajax_polyline get");
+  var connection = mysql.createConnection(polyline_setting);
+  connection.connect();
+
+  connection.query('SELECT * FROM '+polyline_table,
+    function(error, results, fields){
+      if(error==null){
+        console.log("ajax_polylinex get well done!");
+        res.json(results);
+      }else{
+        console.log(error);
+      }
+    }
+  );
+  connection.end();
+});
+
+app.post("/ajax_polyline_delete",(req,res)=>{
+  console.log("/ajax_polyline_delete");
+  let date = new Date();
+  let info = req.body.postid;
+
+  var connection = mysql.createConnection(polyline_setting);
+  connection.connect();
+
+  connection.query('DELETE FROM '+polyline_table+' WHERE postid = ?', info,
+    function(error, results, fields){
+      if(error==null){
+        console.log("PostId : "+info+" was deleted.");
+      }else{
+        console.log(error);
+      }
+    }
+  );
+  connection.end();
+  res.render('draw.ejs',{});
+});
+//-------------------------------------------------------------------------------------------------------------------------
 
 // サーバーの起動
 server.listen(

@@ -9,13 +9,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------
-
 var polyline = [];
 $(function(){
   $.ajax({
   type: "GET",
-  url: "/ajax",
+  url: "/ajax_polyline",
   dataType: "json"
   }).done(function( data, textStatus, jqXHR ) {
     $("log").text("Connection All Correct.");
@@ -26,9 +24,9 @@ $(function(){
       <p>危険度 : ☢ x `+data[i].danger+`</p>
       <p>投稿日時 : `+data[i].date+`</p>
       `;
-      polyline[i] = L.polyline([data[i].lat, data[i].lng])
+      polyline[i] = L.polyline([[data[i].lat1, data[i].lng1],[data[i].lat2, data[i].lng2]])
                    .bindPopup(popup_info).addTo(map)
-                   .on( 'click', function(e) { $(ajax_delete(e.target.postid)); })
+                   .on( 'click', function(e) { $(ajax_delete(e.target.postid)); }) //delete
       polyline[i].on('mouseover', function(e) { this.openPopup(); });
       polyline[i].on('mouseout', function(e) { this.closePopup(); });
       polyline[i].postid = data[i].postid;
@@ -46,13 +44,11 @@ $(function(){
   })
 });
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------
-
 function ajax_delete(postid){
   $.ajax({
   timeout: 1000,
   type: "POST",
-  url: "/ajax_delete",
+  url: "/ajax_polyline_delete",
   data: {
     "postid": postid,
   },
@@ -71,8 +67,6 @@ function ajax_delete(postid){
     window.location.reload();
   })
 }
-
-//-----------------------------------------------------------------------------------------------------------------------------------------------
 
 let firstClick = false;
 let latlngs = [];
