@@ -42,7 +42,7 @@ app.engine('ejs',ejs.renderFile);
 
 function whoAccess(req){
   var address = notice.getipClient(req);
-  console.log("\n/"+req.url+" "+req.method+" : from["+address+"]");
+  console.log("\n"+req.url+" "+req.method+" : from["+address+"]");
   return address;
 }
 
