@@ -7,6 +7,7 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 const ejs = require('ejs');
+const url = require('url');
 const mysql = require('mysql');
 const notice = require('./private/notice');
 const option = require('./private/option.json');
@@ -24,7 +25,8 @@ let mysql_setting = {
   password : option.password,
   database : option.database
 };
-let table = option.Trouble_Table_name;
+let marker_table = option.Trouble_Table_name;
+let polyline_table = option.Polyline_Table_name;
 
 // 公開フォルダの指定
 app.use( express.static( __dirname + '/public' ) );
@@ -38,13 +40,30 @@ app.use(express.json());
 
 app.engine('ejs',ejs.renderFile);
 
+function whoAccess(req){
+  var address = notice.getipClient(req);
+  console.log("\n/"+req.url+" "+req.method+" : from["+address+"]");
+  return address;
+}
+
+function modeSelector(mode){
+  if(mode==="mark"){
+    return marker_table;
+  }else if(mode==="draw"){
+    return polyline_table;
+  }else{
+    console.log("Unexpected Error Occur. This mode is not exist.");
+    return null;
+  }
+}
+
 app.get("/",(req,res)=>{
-    console.log("/get");
+    whoAccess(req);
     res.render('index.ejs',{});
 });
 
 app.post("/",(req,res)=>{
-    console.log("/post");
+    let ip_address = whoAccess(req);
     let date = new Date();
 
     let info = {
@@ -53,7 +72,7 @@ app.post("/",(req,res)=>{
       "lng": req.body.lng,
       "details": req.body.details,
       "danger": req.body.danger,
-      "ip_address": "Mr.Nobody"
+      "ip_address": ip_address
     };
     info["date"] = date.toISOString();
 
@@ -62,7 +81,7 @@ app.post("/",(req,res)=>{
     var connection = mysql.createConnection(mysql_setting);
     connection.connect();
 
-    connection.query('INSERT INTO '+table+' SET ?', info,
+    connection.query('INSERT INTO '+marker_table+' SET ?', info,
       function(error, results, fields){
         if(error==null){
           console.log("posted info");
@@ -72,43 +91,47 @@ app.post("/",(req,res)=>{
       }
     );
 
-  connection.end();
+    connection.end();
     res.render('redirecting.ejs',{});
 });
 
 app.post("/post_test",(req,res)=>{
-    console.log("/post");
+    whoAccess(req);
 
     console.log(req.body);
     res.render('index.ejs',{});
 });
 
 app.get("/search",(req,res)=>{
-    console.log("/search get");
+    whoAccess(req);
     res.render('search.ejs',{});
 });
 
 app.get("/sql",(req,res)=>{
-    console.log("/sql");
+    whoAccess(req);
     res.writeHead(301, { Location: option.public_ip + "phpmyadmin" });
     res.end();
 });
 
 app.get("/maintain",(req,res)=>{
-  console.log("/maintain get");
+  whoAccess(req);
   res.render('maintain.ejs',{});
 });
 
 app.get("/test",(req,res)=>{
-  console.log("/test get");
+  whoAccess(req);
   res.render('test.ejs',{});
 });
 
 app.get("/ajax",(req,res)=>{
-    console.log("/ajax get");
+    whoAccess(req);
+    let mode = req.query.mode;
+    let table = modeSelector(mode);
+
+    console.log(mode+" mode, the table is "+table);
+
     var connection = mysql.createConnection(mysql_setting);
     connection.connect();
-
     connection.query('SELECT * FROM '+table,
       function(error, results, fields){
         if(error==null){
@@ -122,13 +145,14 @@ app.get("/ajax",(req,res)=>{
     connection.end();
 });
 
-//ポストはajaxでしないことに決めました。
-//今は保守用に残してるだけです。
-
 app.post("/ajax_delete",(req,res)=>{
-    console.log("/ajax_delete");
+    whoAccess(req);
     let date = new Date();
     let info = req.body.postid;
+    let mode = req.body.mode;
+    let table = modeSelector(mode);
+    let page = req.body.page;
+    console.log(mode+" mode, the table is "+table);
 
     var connection = mysql.createConnection(mysql_setting);
     connection.connect();
@@ -143,11 +167,12 @@ app.post("/ajax_delete",(req,res)=>{
       }
     );
     connection.end();
-    res.render('index.ejs',{});
+
+    res.render(page,{});
 });
 
 app.get("/database",(req,res)=>{
-    console.log("/database get");
+    whoAccess(req);
     var connection = mysql.createConnection(mysql_setting);
     connection.connect();
 
@@ -168,23 +193,13 @@ app.get("/database",(req,res)=>{
     connection.end();
 });
 
-//draw関連
-//-------------------------------------------------------------------------------------------------------------------------
-let polyline_setting = {
-  host : option.mysql_host,
-  user : option.mysql_user,
-  password : option.password,
-  database : option.database
-};
-let polyline_table = option.Polyline_Table_name;
-
 app.get("/draw",(req,res)=>{
-  console.log("/get");
+  whoAccess(req);
   res.render('draw.ejs',{});
 });
 
 app.post("/draw",(req,res)=>{
-  console.log("/post");
+  let ip_address = whoAccess(req);
   let date = new Date();
 
   let info = {
@@ -195,7 +210,7 @@ app.post("/draw",(req,res)=>{
     "lng2": req.body.lng2,
     "details": req.body.details,
     "danger": req.body.danger,
-    "ip_address": "Mr.Nobody"
+    "ip_address": ip_address
   };
   info["date"] = date.toISOString();
 
@@ -213,48 +228,12 @@ app.post("/draw",(req,res)=>{
     }
   );
 
-connection.end();
+  connection.end();
+  const queryObject = url.parse(req.url,true).query;
+  console.log(queryObject);
   res.render('draw_redirecting.ejs',{});
 });
 
-app.get("/ajax_polyline",(req,res)=>{
-  console.log("/ajax_polyline get");
-  var connection = mysql.createConnection(polyline_setting);
-  connection.connect();
-
-  connection.query('SELECT * FROM '+polyline_table,
-    function(error, results, fields){
-      if(error==null){
-        console.log("ajax_polylinex get well done!");
-        res.json(results);
-      }else{
-        console.log(error);
-      }
-    }
-  );
-  connection.end();
-});
-
-app.post("/ajax_polyline_delete",(req,res)=>{
-  console.log("/ajax_polyline_delete");
-  let date = new Date();
-  let info = req.body.postid;
-
-  var connection = mysql.createConnection(polyline_setting);
-  connection.connect();
-
-  connection.query('DELETE FROM '+polyline_table+' WHERE postid = ?', info,
-    function(error, results, fields){
-      if(error==null){
-        console.log("PostId : "+info+" was deleted.");
-      }else{
-        console.log(error);
-      }
-    }
-  );
-  connection.end();
-  res.render('draw.ejs',{});
-});
 //-------------------------------------------------------------------------------------------------------------------------
 
 // サーバーの起動

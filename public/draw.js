@@ -13,8 +13,11 @@ var polyline = [];
 $(function(){
   $.ajax({
   type: "GET",
-  url: "/ajax_polyline",
-  dataType: "json"
+  url: "/ajax",
+  dataType: "json",
+  data: {
+    "mode" : "draw",
+  }
   }).done(function( data, textStatus, jqXHR ) {
     $("log").text("Connection All Correct.");
     for(let i = 0;i < data.length;i++){
@@ -48,9 +51,11 @@ function ajax_delete(postid){
   $.ajax({
   timeout: 1000,
   type: "POST",
-  url: "/ajax_polyline_delete",
+  url: "/ajax_delete",
   data: {
     "postid": postid,
+    "mode" : "draw",
+    "page" : "draw.ejs"
   },
   dataType: "json",
   beforeSend: ()=>{
@@ -174,5 +179,3 @@ map.on('click', function(e){
 });
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
-
-

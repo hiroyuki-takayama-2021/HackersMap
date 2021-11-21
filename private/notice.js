@@ -22,3 +22,19 @@ exports.getip = function getLocalAddress() {
     }
     return ifacesObj.ipv4;
 };
+
+exports.getipClient = function getClientAddress(request) {
+  if (request.headers['x-forwarded-for']) {
+    return request.headers['x-forwarded-for'];
+  }
+  if (request.connection && request.connection.remoteAddress) {
+    return request.connection.remoteAddress;
+  }
+  if (request.connection.socket && request.connection.socket.remoteAddress) {
+    return request.connection.socket.remoteAddress;
+  }
+  if (request.socket && request.socket.remoteAddress) {
+    return request.socket.remoteAddress;
+  }
+  return '0.0.0.0';
+};

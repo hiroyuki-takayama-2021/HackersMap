@@ -41,7 +41,10 @@ function mapping( place=[34.48170262662108,-224.57353055466228] ){
     $.ajax({
     type: "GET",
     url: "/ajax",
-    dataType: "json"
+    dataType: "json",
+    data: {
+      "mode" : "mark",
+    }
     }).done(function( data, textStatus, jqXHR ) {
       $("log").text("Connection All Correct.");
       for(let i = 0;i < data.length;i++){
@@ -75,7 +78,9 @@ function mapping( place=[34.48170262662108,-224.57353055466228] ){
     type: "POST",
     url: "/ajax_delete",
     data: {
-      "postid": postid,
+      "postid" : postid,
+      "mode" : "mark",
+      "page" : "index.ejs"
     },
     dataType: "json",
     beforeSend: ()=>{
