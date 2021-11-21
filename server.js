@@ -214,8 +214,7 @@ app.post("/draw",(req,res)=>{
   };
   info["date"] = date.toISOString();
 
-  console.log(req.body);
-  var connection = mysql.createConnection(polyline_setting);
+  var connection = mysql.createConnection(mysql_setting);
   connection.connect();
 
   connection.query('INSERT INTO '+polyline_table+' SET ?', info,
