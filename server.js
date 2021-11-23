@@ -176,7 +176,7 @@ app.get("/database",(req,res)=>{
     var connection = mysql.createConnection(mysql_setting);
     connection.connect();
 
-    connection.query('SELECT * FROM '+table,
+    connection.query('SELECT * FROM '+marker_table,
       function(error, results, fields){
         if(error==null){
           console.log("Good!");
@@ -230,10 +230,8 @@ app.post("/draw",(req,res)=>{
   connection.end();
   const queryObject = url.parse(req.url,true).query;
   console.log(queryObject);
-  res.render('draw_redirecting.ejs',{});
+  res.render('redirecting.ejs',{});
 });
-
-//-------------------------------------------------------------------------------------------------------------------------
 
 // サーバーの起動
 server.listen(
