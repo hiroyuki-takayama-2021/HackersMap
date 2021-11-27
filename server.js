@@ -57,6 +57,44 @@ function modeSelector(mode){
   }
 }
 
+/*
+//毎秒投稿禁止 & フォーム送信
+function postLimitter(address, sql_setting, table, info){
+  var connection = mysql.createConnection(sql_setting);
+  connection.connect();
+
+  connection.query("SELECT * FROM "+table+" WHERE date=(select Max(date) from "+table+") and ip_address='" + address + "'",
+  function(error, results, fields){
+  if(error==null){
+    console.log("");
+    let last_post_time = results[0].date;
+    last_post_time.setHours(last_post_time.getHours() + 9);
+    let post_time = new Date();
+    let dif = post_time - last_post_time;
+    console.log("The difference is " + dif + " milli seconds");
+    console.log("")
+
+    if(dif > 20000){
+      connection.query('INSERT INTO '+table+' SET ?', info,
+      function(error, results, fields){
+        if(error==null){
+          console.log("posted info");
+        }else{
+          console.log(error);
+        }
+      });
+    }else{
+      console.log("too much POST in shot time!");
+    }
+  }else{
+    console.log(error);
+  
+  connection.end();
+  }
+  });
+}
+*/
+
 app.get("/",(req,res)=>{
     whoAccess(req);
     res.render('index.ejs',{});
@@ -78,20 +116,14 @@ app.post("/",(req,res)=>{
 
     console.log(req.body);
 
-    var connection = mysql.createConnection(mysql_setting);
-    connection.connect();
-
-    connection.query('INSERT INTO '+marker_table+' SET ?', info,
+    connection.query('INSERT INTO '+table+' SET ?', info,
       function(error, results, fields){
         if(error==null){
           console.log("posted info");
         }else{
           console.log(error);
         }
-      }
-    );
-
-    connection.end();
+      });
     res.render('redirecting.ejs',{});
 });
 
